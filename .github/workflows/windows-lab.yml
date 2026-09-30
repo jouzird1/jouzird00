@@ -1,0 +1,28 @@
+name: Windows Lab
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: System information
+        shell: powershell
+        run: ./scripts/system-info.ps1
+
+      - name: Create test artifact
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path output | Out-Null
+          "Windows runner test completed at $(Get-Date -Format o)" | Out-File output/result.txt -Encoding utf8
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-lab-result
+          path: output/result.txt
